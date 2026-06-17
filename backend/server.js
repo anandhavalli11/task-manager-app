@@ -11,8 +11,9 @@ const taskRoutes = require("./routes/tasks");
 
 const app = express();
 
+
 // ======================
-// CORS CONFIG (FIXED)
+// CORS CONFIG (FIXED CORE)
 // ======================
 const corsOptions = {
   origin: "https://task-manager-j26vw6h48-anandhavalli.vercel.app",
@@ -22,18 +23,21 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options("*", cors(corsOptions)); // preflight fix
+
 
 // ======================
 // Middleware
 // ======================
 app.use(express.json());
 
+
 // ======================
 // Routes
 // ======================
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+
 
 // ======================
 // Test Route
@@ -42,11 +46,13 @@ app.get("/", (req, res) => {
   res.send("Server Running OK 🚀");
 });
 
+
 // ======================
-// Debug (optional)
+// Debug logs
 // ======================
 console.log("MONGO_URI:", process.env.MONGO_URI ? "Loaded" : "Missing");
 console.log("JWT_SECRET:", process.env.JWT_SECRET ? "Loaded" : "Missing");
+
 
 // ======================
 // MongoDB Connection
@@ -55,6 +61,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log("MongoDB Error:", err));
+
 
 // ======================
 // Start Server

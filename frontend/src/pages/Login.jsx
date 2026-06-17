@@ -9,7 +9,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await API.post("/auth/login", {
+      const res = await API.post("/api/auth/login", {
         email,
         password,
       });
@@ -18,94 +18,37 @@ export default function Login() {
 
       alert("Login Successful 🚀");
       navigate("/tasks");
-
     } catch (error) {
-      console.log("LOGIN ERROR:", error);
-
-      alert(
-        error.response?.data?.message ||
-        "Login Failed"
-      );
+      console.log(error);
+      alert(error.response?.data?.message || "Login Failed");
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Login</h2>
+    <div>
+      <h2>Login</h2>
 
-        <input
-          style={styles.input}
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      <br />
+      <br />
 
-        <button style={styles.button} onClick={handleLogin}>
-          Login
-        </button>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-        <p style={styles.text}>
-          Don't have an account?{" "}
-          <span style={styles.link} onClick={() => navigate("/register")}>
-            Register
-          </span>
-        </p>
-      </div>
+      <br />
+      <br />
+
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f4f6f8",
-  },
-  card: {
-    width: "320px",
-    padding: "25px",
-    background: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-    textAlign: "center",
-  },
-  title: { marginBottom: "15px" },
-  input: {
-    width: "100%",
-    padding: "10px",
-    margin: "8px 0",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-  },
-  button: {
-    width: "100%",
-    padding: "10px",
-    marginTop: "10px",
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-  },
-  text: {
-    marginTop: "10px",
-    fontSize: "14px",
-  },
-  link: {
-    color: "#2563eb",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-};

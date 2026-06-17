@@ -3,23 +3,24 @@ import { useNavigate } from "react-router-dom";
 import API from "../api";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
 
-  const navigate = useNavigate();
-
   const handleSubmit = async () => {
     try {
-      await API.post("/auth/register", form);
+      const res = await API.post("/api/auth/register", form);
+
+      console.log("REGISTER SUCCESS:", res.data);
 
       alert("Registered Successfully 🚀");
       navigate("/login");
-
     } catch (err) {
-      console.log("REGISTER ERROR:", err);
+      console.log("REGISTER ERROR:", err.response?.data || err.message);
 
       alert(
         err.response?.data?.message ||
@@ -31,25 +32,36 @@ export default function Register() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2>Register</h2>
+        <h2 style={styles.title}>Register</h2>
 
         <input
           style={styles.input}
+          type="text"
           placeholder="Name"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          value={form.name}
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
         />
 
         <input
           style={styles.input}
+          type="email"
           placeholder="Email"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
         />
 
         <input
           style={styles.input}
           type="password"
           placeholder="Password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
         />
 
         <button style={styles.button} onClick={handleSubmit}>
@@ -57,8 +69,11 @@ export default function Register() {
         </button>
 
         <p style={styles.text}>
-          Already have account?{" "}
-          <span style={styles.link} onClick={() => navigate("/login")}>
+          Already have an account?{" "}
+          <span
+            style={styles.link}
+            onClick={() => navigate("/login")}
+          >
             Login
           </span>
         </p>
@@ -75,35 +90,45 @@ const styles = {
     alignItems: "center",
     background: "#f4f6f8",
   },
+
   card: {
-    width: "320px",
+    width: "340px",
     padding: "25px",
-    background: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+    background: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
     textAlign: "center",
   },
+
+  title: {
+    marginBottom: "20px",
+  },
+
   input: {
     width: "100%",
     padding: "10px",
-    margin: "8px 0",
+    marginBottom: "12px",
     border: "1px solid #ccc",
     borderRadius: "6px",
+    boxSizing: "border-box",
   },
+
   button: {
     width: "100%",
     padding: "10px",
-    marginTop: "10px",
     background: "#16a34a",
-    color: "white",
+    color: "#fff",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
+    fontSize: "16px",
   },
+
   text: {
-    marginTop: "10px",
+    marginTop: "15px",
     fontSize: "14px",
   },
+
   link: {
     color: "#2563eb",
     cursor: "pointer",

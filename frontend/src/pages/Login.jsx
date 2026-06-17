@@ -9,7 +9,6 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // ✅ IMPORTANT FIX: backend route
       const res = await API.post("/auth/login", {
         email,
         password,
@@ -25,7 +24,7 @@ export default function Login() {
 
       alert(
         error.response?.data?.message ||
-        "Login Failed (check backend / API URL)"
+        "Login Failed"
       );
     }
   };
@@ -82,9 +81,7 @@ const styles = {
     boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
     textAlign: "center",
   },
-  title: {
-    marginBottom: "15px",
-  },
+  title: { marginBottom: "15px" },
   input: {
     width: "100%",
     padding: "10px",

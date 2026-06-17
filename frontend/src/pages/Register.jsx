@@ -13,11 +13,18 @@ export default function Register() {
 
   const handleSubmit = async () => {
     try {
-      await API.post("/api/auth/register", form);
+      await API.post("/auth/register", form);
+
       alert("Registered Successfully 🚀");
       navigate("/login");
+
     } catch (err) {
-      alert("Registration Failed");
+      console.log("REGISTER ERROR:", err);
+
+      alert(
+        err.response?.data?.message ||
+        "Registration Failed"
+      );
     }
   };
 

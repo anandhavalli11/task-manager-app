@@ -45,7 +45,7 @@ task-manager-app/
 🚀 Installation & Setup
 
 1️⃣ Clone Repository
-git clone https://github.com/your-username/task-manager-app.git
+git clone https://github.com/anandhavalli11/task-manager-app
 cd task-manager-app
 
 2️⃣ Backend Setup
@@ -53,8 +53,8 @@ cd backend
 npm install
 
 Create .env file:
-MONGO_URI=your_mongodb_url
-JWT_SECRET=your_secret_key
+MONGO_URI=my_url
+JWT_SECRET=my_secret_key
 PORT=5000
 
 Run backend:

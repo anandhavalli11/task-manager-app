@@ -5,22 +5,32 @@ import API from "../api";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setLoading(true);
+
     try {
-     const res = await API.post("/auth/login", {
-  email,
-  password,
-}); 
+      const res = await API.post("/api/auth/login", {
+        email,
+        password,
+      });
 
       localStorage.setItem("token", res.data.token);
 
       alert("Login Successful 🚀");
       navigate("/tasks");
     } catch (error) {
-      console.log(error);
-      alert(error.response?.data?.message || "Login Failed");
+      console.log("LOGIN ERROR:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Login Failed (Check backend / network)"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,8 +45,7 @@ export default function Login() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
       <input
         type="password"
@@ -45,10 +54,11 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin} disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
+      </button>
     </div>
   );
 }

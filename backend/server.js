@@ -1,5 +1,4 @@
-﻿
-const path = require("path");
+﻿const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 const express = require("express");
@@ -13,17 +12,21 @@ const app = express();
 
 
 // ======================
-// CORS CONFIG (FIXED CORE)
+// CORS (FINAL CLEAN FIX)
 // ======================
-const corsOptions = {
-  origin: "https://task-manager-j26vw6h48-anandhavalli.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
+const allowedOrigin =
+  "https://task-manager-j26vw6h48-anandhavalli.vercel.app";
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // preflight fix
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Preflight support
+app.options("*", cors());
 
 
 // ======================
@@ -40,18 +43,11 @@ app.use("/api/tasks", taskRoutes);
 
 
 // ======================
-// Test Route
+// Health Check Route
 // ======================
 app.get("/", (req, res) => {
   res.send("Server Running OK 🚀");
 });
-
-
-// ======================
-// Debug logs
-// ======================
-console.log("MONGO_URI:", process.env.MONGO_URI ? "Loaded" : "Missing");
-console.log("JWT_SECRET:", process.env.JWT_SECRET ? "Loaded" : "Missing");
 
 
 // ======================

@@ -12,21 +12,15 @@ const app = express();
 
 
 // ======================
-// CORS (FINAL SAFE VERSION)
+// CORS (SIMPLE + SAFE)
 // ======================
-const allowedOrigin =
-  "https://task-manager-j26vw6h48-anandhavalli.vercel.app";
-
 app.use(
   cors({
-    origin: allowedOrigin,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    origin: "https://task-manager-j26vw6h48-anandhavalli.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Preflight safe handling
-app.options("*", cors());
 
 
 // ======================
@@ -43,7 +37,7 @@ app.use("/api/tasks", taskRoutes);
 
 
 // ======================
-// Health check
+// Health Check
 // ======================
 app.get("/", (req, res) => {
   res.send("Server Running OK 🚀");
@@ -60,7 +54,7 @@ mongoose
 
 
 // ======================
-// Start server
+// Start Server
 // ======================
 const PORT = process.env.PORT || 5000;
 

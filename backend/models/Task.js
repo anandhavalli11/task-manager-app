@@ -18,9 +18,7 @@ const taskSchema = new mongoose.Schema(
       default: "guest",
     },
   },
-  {
-    timestamps: true, // createdAt + updatedAt automatically வரும்
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Task", taskSchema);

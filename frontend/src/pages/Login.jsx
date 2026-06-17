@@ -1,17 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { useNavigate } from "react-router-dom";
+import "../styles.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setLoading(true);
-
     try {
       const res = await API.post("/api/auth/login", {
         email,
@@ -19,46 +16,35 @@ export default function Login() {
       });
 
       localStorage.setItem("token", res.data.token);
-
-      alert("Login Successful 🚀");
       navigate("/tasks");
-    } catch (error) {
-      console.log("LOGIN ERROR:", error);
-
-      alert(
-        error.response?.data?.message ||
-        "Login Failed (Check backend / network)"
-      );
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      alert(err.response?.data?.message || "Login Failed");
     }
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Login</h2>
 
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Enter Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br /><br />
-
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Enter Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <br /><br />
+      <button onClick={handleLogin}>Login</button>
 
-      <button onClick={handleLogin} disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
-      </button>
+      <p className="link-text" onClick={() => navigate("/register")}>
+        Don't have account? Register
+      </p>
     </div>
   );
 }

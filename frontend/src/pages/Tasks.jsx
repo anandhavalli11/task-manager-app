@@ -1,161 +1,227 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { useNavigate } from "react-router-dom";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
+  const [editId, setEditId] = useState(null);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // ======================
   // GET TASKS
-  // ======================
   const fetchTasks = async () => {
     try {
-      const res = await API.get("/api/tasks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const res = await API.get("/api/tasks");
       setTasks(res.data);
     } catch (err) {
-      console.log("FETCH TASK ERROR:", err);
-
-      // If token invalid → logout
-      if (err.response?.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
+      console.log(err);
     }
   };
 
-  // ======================
-  // ADD TASK
-  // ======================
-  const addTask = async () => {
-    if (!title) return;
+  // ADD / UPDATE TASK
+  const handleSubmit = async () => {
+    if (!title.trim()) return alert("Enter task");
 
     try {
-      await API.post(
-        "/api/tasks",
-        { title },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (editId) {
+        await API.put(`/api/tasks/${editId}`, {
+          title,
+        });
+      } else {
+        await API.post("/api/tasks", { title });
+      }
 
       setTitle("");
+      setEditId(null);
       fetchTasks();
     } catch (err) {
-      console.log("ADD TASK ERROR:", err);
+      console.log(err);
     }
   };
 
-  // ======================
-  // DELETE TASK
-  // ======================
+  // DELETE
   const deleteTask = async (id) => {
-    try {
-      await API.delete(`/api/tasks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      fetchTasks();
-    } catch (err) {
-      console.log("DELETE TASK ERROR:", err);
-    }
+    await API.delete(`/api/tasks/${id}`);
+    fetchTasks();
   };
 
-  // ======================
-  // TOGGLE TASK
-  // ======================
-  const toggleTask = async (id) => {
-    try {
-      await API.put(
-        `/api/tasks/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      fetchTasks();
-    } catch (err) {
-      console.log("TOGGLE TASK ERROR:", err);
-    }
+  // EDIT (fill input)
+  const startEdit = (task) => {
+    setTitle(task.title);
+    setEditId(task._id);
   };
 
-  // ======================
-  // LOGOUT
-  // ======================
+  // TOGGLE COMPLETE
+  const toggleTask = async (task) => {
+    await API.put(`/api/tasks/${task._id}`, {
+      completed: !task.completed,
+    });
+
+    fetchTasks();
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
-  // ======================
-  // PROTECT ROUTE + LOAD
-  // ======================
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     fetchTasks();
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Task Manager 🚀</h2>
+    <div style={styles.container}>
+      <h2 style={styles.heading}>📝 Task Manager</h2>
 
-      <button onClick={logout}>Logout</button>
+      <button style={styles.logoutBtn} onClick={logout}>
+        Logout
+      </button>
 
-      <br /><br />
-
-      <div>
+      {/* INPUT */}
+      <div style={styles.inputBox}>
         <input
+          style={styles.input}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter task"
+          placeholder="Enter your task..."
         />
 
-        <button onClick={addTask}>Add</button>
+        <button style={styles.addBtn} onClick={handleSubmit}>
+          {editId ? "Update" : "Add"}
+        </button>
       </div>
 
-      <br />
-
-      {tasks.length === 0 ? (
-        <p>No tasks found</p>
-      ) : (
-        tasks.map((task) => (
-          <div key={task._id} style={{ marginTop: 10 }}>
+      {/* TASK LIST */}
+      <div style={styles.list}>
+        {tasks.map((task) => (
+          <div key={task._id} style={styles.card}>
             <span
-              onClick={() => toggleTask(task._id)}
+              onClick={() => toggleTask(task)}
               style={{
+                ...styles.text,
                 textDecoration: task.completed ? "line-through" : "none",
-                cursor: "pointer",
-                marginRight: 10,
+                color: task.completed ? "gray" : "#000",
               }}
             >
               {task.title}
             </span>
 
-            <button onClick={() => deleteTask(task._id)}>
-              Delete
-            </button>
+            <div style={styles.btnGroup}>
+              <button
+                style={styles.editBtn}
+                onClick={() => startEdit(task)}
+              >
+                Edit
+              </button>
+
+              <button
+                style={styles.deleteBtn}
+                onClick={() => deleteTask(task._id)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        ))
-      )}
+        ))}
+      </div>
     </div>
   );
 }
+
+/* ====== STYLES ====== */
+const styles = {
+  container: {
+    maxWidth: "600px",
+    margin: "40px auto",
+    fontFamily: "Arial",
+    textAlign: "center",
+  },
+
+  heading: {
+    marginBottom: "15px",
+    fontSize: "24px",
+    fontWeight: "bold",
+  },
+
+  logoutBtn: {
+    background: "black",
+    color: "white",
+    padding: "8px 12px",
+    border: "none",
+    cursor: "pointer",
+    marginBottom: "15px",
+    borderRadius: "5px",
+  },
+
+  inputBox: {
+    display: "flex",
+    gap: "10px",
+    marginBottom: "25px",
+  },
+
+  input: {
+    flex: 1,
+    padding: "12px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    fontSize: "16px",
+  },
+
+  addBtn: {
+    padding: "12px 18px",
+    background: "green",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "8px",
+    fontSize: "14px",
+  },
+
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+
+  card: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px",
+    background: "#f5f5f5",
+    borderRadius: "10px",
+  },
+
+  text: {
+    flex: 1,
+    textAlign: "left",
+    fontSize: "17px",
+    fontWeight: "500",
+    paddingRight: "10px",
+    wordBreak: "break-word",
+  },
+
+  btnGroup: {
+    display: "flex",
+    gap: "8px",
+  },
+
+  editBtn: {
+    background: "orange",
+    border: "none",
+    padding: "6px 12px",
+    cursor: "pointer",
+    borderRadius: "5px",
+  },
+
+  deleteBtn: {
+    background: "red",
+    color: "white",
+    border: "none",
+    padding: "6px 12px",
+    cursor: "pointer",
+    borderRadius: "5px",
+  },
+};

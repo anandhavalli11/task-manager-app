@@ -1,39 +1,73 @@
 const express = require("express");
 const router = express.Router();
-
 const Task = require("../models/Task");
-const auth = require("../middleware/auth");
 
-
-// ================= GET TASKS =================
-router.get("/", auth, async (req, res) => {
-  const tasks = await Task.find({ userId: req.user.id });
-  res.json(tasks);
+// =======================
+// GET ALL TASKS
+// =======================
+router.get("/", async (req, res) => {
+  try {
+    const tasks = await Task.find().sort({ createdAt: -1 });
+    res.json(tasks);
+  } catch (err) {
+    console.log("GET TASK ERROR:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 });
 
+// =======================
+// ADD TASK
+// =======================
+router.post("/", async (req, res) => {
+  try {
+    const { title } = req.body;
 
-// ================= ADD TASK =================
-router.post("/", auth, async (req, res) => {
-  const task = new Task({
-    title: req.body.title,
-    userId: req.user.id,
-    completed: false,
-  });
+    // validation
+    if (!title || title.trim() === "") {
+      return res.status(400).json({
+        message: "Task title is required",
+      });
+    }
 
-  await task.save();
-  res.json(task);
+    console.log("TASK RECEIVED:", req.body);
+
+    const task = new Task({
+      title: title.trim(),
+      completed: false,
+      userId: "temp-user", // later auth fix pannalam
+    });
+
+    await task.save();
+
+    res.status(201).json(task);
+  } catch (err) {
+    console.log("ADD TASK ERROR:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 });
 
+// =======================
+// DELETE TASK
+// =======================
+router.delete("/:id", async (req, res) => {
+  try {
+    const task = await Task.findByIdAndDelete(req.params.id);
 
-// ================= DELETE TASK =================
-router.delete("/:id", auth, async (req, res) => {
-  await Task.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    console.log("DELETE ERROR:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 });
 
-
-// ================= TOGGLE COMPLETE (IMPORTANT) =================
-router.put("/:id", auth, async (req, res) => {
+// =======================
+// TOGGLE COMPLETE
+// =======================
+router.put("/:id", async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -47,6 +81,7 @@ router.put("/:id", auth, async (req, res) => {
 
     res.json(task);
   } catch (err) {
+    console.log("UPDATE ERROR:", err.message);
     res.status(500).json({ message: err.message });
   }
 });

@@ -1,75 +1,59 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { useNavigate } from "react-router-dom";
+import "../styles.css";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    setLoading(true);
-
     try {
-      const res = await API.post("/api/auth/register", {
+      await API.post("/api/auth/register", {
         name,
         email,
         password,
       });
 
-      alert(res.data.message || "Registered Successfully 🚀");
-
-      // After register → go to login page
+      alert("Registered Successfully 🚀");
       navigate("/login");
-    } catch (error) {
-      console.log("REGISTER ERROR:", error);
-
-      alert(
-        error.response?.data?.message ||
-        "Register Failed (Check backend / network)"
-      );
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      alert(err.response?.data?.message || "Register Failed");
     }
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Register</h2>
 
       <input
         type="text"
-        placeholder="Name"
+        placeholder="Enter Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
-      <br /><br />
-
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Enter Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br /><br />
-
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Enter Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <br /><br />
+      <button onClick={handleRegister}>Register</button>
 
-      <button onClick={handleRegister} disabled={loading}>
-        {loading ? "Registering..." : "Register"}
-      </button>
+      <p className="link-text" onClick={() => navigate("/login")}>
+        Already have account? Login
+      </p>
     </div>
   );
 }

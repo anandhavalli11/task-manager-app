@@ -6,38 +6,95 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
+// ======================
 // REGISTER
+// ======================
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  const exists = await User.findOne({ email });
-  if (exists) return res.status(400).json({ message: "User exists" });
+    // Check if user already exists
+    const exists = await User.findOne({ email });
 
-  const hashed = await bcrypt.hash(password, 10);
+    if (exists) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
 
-  const user = new User({ name, email, password: hashed });
-  await user.save();
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  res.json({ message: "Registered" });
+    // Create user
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    // Save user
+    await user.save();
+
+    res.status(201).json({
+      message: "Registered Successfully",
+    });
+  } catch (err) {
+    console.log("REGISTER ERROR:", err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
 });
 
+// ======================
 // LOGIN
+// ======================
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ message: "User not found" });
+    // Find user
+    const user = await User.findOne({ email });
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ message: "Wrong password" });
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
 
-  const token = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
+    // Compare password
+    const match = await bcrypt.compare(password, user.password);
 
-  res.json({ token, user });
+    if (!match) {
+      return res.status(400).json({
+        message: "Wrong password",
+      });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    res.status(200).json({
+      message: "Login Successful",
+      token,
+      user,
+    });
+  } catch (err) {
+    console.log("LOGIN ERROR:", err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
 });
 
 module.exports = router;

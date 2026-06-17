@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -11,21 +11,29 @@ export default function Tasks() {
 
   // GET TASKS
   const fetchTasks = async () => {
-    const res = await axios.get("http://localhost:5000/api/tasks", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const res = await API.get("/api/tasks", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    setTasks(res.data);
+      setTasks(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // ADD TASK
   const addTask = async () => {
     if (!title) return;
 
-    await axios.post(
-      "http://localhost:5000/api/tasks",
+    await API.post(
+      "/api/tasks",
       { title },
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     setTitle("");
@@ -34,25 +42,26 @@ export default function Tasks() {
 
   // DELETE TASK
   const deleteTask = async (id) => {
-    await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+    await API.delete(`/api/tasks/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     fetchTasks();
   };
 
-  // TOGGLE COMPLETE
+  // TOGGLE TASK
   const toggleTask = async (id) => {
-    await axios.put(
-      `http://localhost:5000/api/tasks/${id}`,
+    await API.put(
+      `/api/tasks/${id}`,
       {},
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     fetchTasks();
   };
 
-  // LOGOUT
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -62,119 +71,37 @@ export default function Tasks() {
     fetchTasks();
   }, []);
 
-  const completedCount = tasks.filter(t => t.completed).length;
-
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2>Task Manager 🚀</h2>
+    <div style={{ padding: 20 }}>
+      <h2>Task Manager 🚀</h2>
 
-        <button onClick={logout} style={styles.logout}>
-          Logout
-        </button>
-      </div>
+      <button onClick={logout}>Logout</button>
 
-      <p>
-        Total: {tasks.length} | Completed: {completedCount}
-      </p>
-
-      <div style={styles.inputBox}>
+      <div>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter task"
-          style={styles.input}
         />
 
-        <button onClick={addTask} style={styles.addBtn}>
-          Add
-        </button>
+        <button onClick={addTask}>Add</button>
       </div>
 
-      <div>
-        {tasks.length === 0 ? (
-          <p>No tasks yet 😴</p>
-        ) : (
-          tasks.map((task) => (
-            <div key={task._id} style={styles.card}>
-              <span
-                onClick={() => toggleTask(task._id)}
-                style={{
-                  cursor: "pointer",
-                  textDecoration: task.completed ? "line-through" : "none",
-                  fontSize: "18px",
-                }}
-              >
-                {task.title}
-              </span>
+      {tasks.map((task) => (
+        <div key={task._id}>
+          <span
+            onClick={() => toggleTask(task._id)}
+            style={{
+              textDecoration: task.completed ? "line-through" : "none",
+              cursor: "pointer",
+            }}
+          >
+            {task.title}
+          </span>
 
-              <button
-                onClick={() => deleteTask(task._id)}
-                style={styles.delete}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        )}
-      </div>
+          <button onClick={() => deleteTask(task._id)}>Delete</button>
+        </div>
+      ))}
     </div>
   );
 }
-
-// ================= STYLES =================
-const styles = {
-  container: {
-    padding: "20px",
-    maxWidth: "500px",
-    margin: "auto",
-    fontFamily: "Arial",
-  },
-
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  logout: {
-    background: "black",
-    color: "white",
-    padding: "5px 10px",
-    border: "none",
-    cursor: "pointer",
-  },
-
-  inputBox: {
-    display: "flex",
-    marginBottom: "20px",
-  },
-
-  input: {
-    flex: 1,
-    padding: "10px",
-  },
-
-  addBtn: {
-    padding: "10px",
-    background: "green",
-    color: "white",
-    border: "none",
-  },
-
-  card: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "10px",
-    margin: "10px 0",
-    background: "#f4f4f4",
-    borderRadius: "8px",
-  },
-
-  delete: {
-    background: "red",
-    color: "white",
-    border: "none",
-    padding: "5px",
-  },
-};

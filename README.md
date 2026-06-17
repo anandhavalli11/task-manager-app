@@ -1,8 +1,6 @@
-.
-
 🚀 Task Manager App (MERN Stack)
 
-A full-stack Task Management Web Application built using MongoDB, Express, React, Node.js (MERN Stack) with authentication and full CRUD features.
+A full-stack Task Management Web Application built using MongoDB, Express, React, Node.js (MERN Stack) with authentication and CRUD features.
 
 ✨ Features
 🔐 User Register & Login (JWT Authentication)
@@ -11,16 +9,16 @@ A full-stack Task Management Web Application built using MongoDB, Express, React
 🗑️ Delete Tasks
 ✔️ Mark Tasks as Completed
 🎨 Clean Modern UI
-⚡ Instant Updates (No page refresh needed)
+⚡ Instant Updates (No refresh needed)
 🛠️ Tech Stack
 
-Frontend:
+Frontend
 
 React (Vite)
 Axios
 CSS
 
-Backend:
+Backend
 
 Node.js
 Express.js
@@ -51,6 +49,7 @@ task-manager-app/
 🚀 Installation & Setup
 1️⃣ Clone Repository
 git clone https://github.com/your-username/task-manager-app.git
+cd task-manager-app
 2️⃣ Backend Setup
 cd backend
 npm install
@@ -77,16 +76,6 @@ GET    /api/tasks
 POST   /api/tasks
 PUT    /api/tasks/:id
 DELETE /api/tasks/:id
-🔥 Future Improvements
-🌙 Dark Mode
-📱 Mobile Responsive UI
-📅 Due Dates for Tasks
-🎯 Priority System (High / Medium / Low)
-🔔 Notifications System
-👨‍💻 Author
-
-Anandha Valli V
-
 📸 Screenshots
 🔐 Login Page
 
@@ -94,10 +83,18 @@ Anandha Valli V
 
 📋 Task Dashboard
 
-✏️ Edit Task Feature
+✏️ Edit Task
 
-✔️ Completed Task View
+🔥 Future Improvements
+🌙 Dark Mode
+📱 Mobile Responsive UI
+📅 Due Dates
+🎯 Priority System
+🔔 Notifications
+👨‍💻 Author
+
+Anandha Valli V
 
 ⭐ Support
 
-If you like this project, please give a ⭐ on GitHub and feel free to improve it!
+If you like this project, give a ⭐ on GitHub and feel free to contribute!

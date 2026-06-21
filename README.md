@@ -1,98 +1,100 @@
-# 📝 Task Manager App
+🚀 Task Manager App (MERN Stack)
 
-A full-stack Task Manager web application built using the MERN stack (MongoDB, Express, React, Node.js). This project allows users to register, login, and manage their daily tasks efficiently.
+A full-stack Task Management Web Application built using MongoDB, Express, React, Node.js (MERN Stack) with authentication and full CRUD features.
 
----
+✨ Features
+🔐 User Register & Login (JWT Authentication)
+📝 Add Tasks
+✏️ Edit Tasks
+🗑️ Delete Tasks
+✔️ Mark Tasks as Completed
+🎨 Clean Modern UI
+⚡ Instant Updates (No refresh needed)
 
-## 🚀 Features
+✨ Features
+🔐 User Register & Login (JWT Authentication)
+📝 Add Tasks
+✏️ Edit Tasks
+🗑️ Delete Tasks
+✔️ Mark Tasks as Completed
+🎨 Clean Modern UI
+⚡ Instant Updates (No refresh needed)
 
-- User Registration and Login (JWT Authentication)
-- Secure Password Hashing (bcrypt)
-- Create new tasks
-- View all tasks
-- Mark tasks as completed / not completed
-- Delete tasks
-- Protected API routes
-- Real-time UI updates
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend:
-- React (Vite)
-- Axios
-- React Router DOM
-- JavaScript (ES6)
-
-### Backend:
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT Authentication
-- bcryptjs
-- dotenv
-
----
-
-## 📁 Project Structure
-
+📁 Project Structure
 task-manager-app/
 │
 ├── backend/
-│ ├── models/
-│ ├── routes/
-│ ├── middleware/
-│ ├── server.js
-│ └── .env
+│   ├── models/
+│   ├── routes/
+│   ├── server.js
 │
-└── frontend/
-├── src/
-├── pages/
-├── components/
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── api.js
+│   │   ├── styles.css
+│
+├── screenshots/
+│   ├── login.png
+│   ├── register.png
+│   ├── tasks.png
+│   ├── edit.png
+│
+└── README.md
 
+🚀 Installation & Setup
 
----
+1️⃣ Clone Repository
+git clone https://github.com/anandhavalli11/task-manager-app
+cd task-manager-app
 
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/your-username/task-manager-app.git
-2️⃣ Backend setup
+2️⃣ Backend Setup
 cd backend
 npm install
 
 Create .env file:
-
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=my_url
+JWT_SECRET=my_secret_key
+PORT=5000
 
 Run backend:
-
 node server.js
-3️⃣ Frontend setup
+
+3️⃣ Frontend Setup
 cd frontend
 npm install
 npm run dev
-🌐 Running the Project
-Frontend: http://localhost:5173
-Backend: http://localhost:5000
-📌 API Endpoints
-Auth Routes:
-POST /api/auth/register → Register user
-POST /api/auth/login → Login user
-Task Routes:
-GET /api/tasks → Get all tasks
-POST /api/tasks → Create task
-PUT /api/tasks/:id → Update task (toggle complete)
-DELETE /api/tasks/:id → Delete task
-🎯 Future Improvements
-Task categories
-Due dates & reminders
-Drag and drop UI
-Deploy on cloud (Render / Vercel)
-Mobile responsive design improvements
-👨‍💻 Author
 
+🌐 API Endpoints
+
+🔐 Auth Routes
+POST /api/auth/register
+POST /api/auth/login
+
+📋 Task Routes
+GET    /api/tasks
+POST   /api/tasks
+PUT    /api/tasks/:id
+DELETE /api/tasks/:id
+
+📸 Screenshots
+
+🔐 Login Page
+
+📝 Register Page
+
+📋 Task Dashboard
+
+
+🔥 Future Improvements
+🌙 Dark Mode
+📱 Mobile Responsive UI
+📅 Due Dates
+🎯 Priority System
+🔔 Notifications
+
+👨‍💻 Author
 Anandha Valli V
+
+⭐ Support
+If you like this project, give a ⭐ on GitHub and feel free to contribute!

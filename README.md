@@ -11,16 +11,8 @@ A full-stack Task Management Web Application built using MongoDB, Express, React
 🎨 Clean Modern UI
 ⚡ Instant Updates (No refresh needed)
 
-✨ Features
-🔐 User Register & Login (JWT Authentication)
-📝 Add Tasks
-✏️ Edit Tasks
-🗑️ Delete Tasks
-✔️ Mark Tasks as Completed
-🎨 Clean Modern UI
-⚡ Instant Updates (No refresh needed)
-
 📁 Project Structure
+
 task-manager-app/
 │
 ├── backend/
@@ -38,14 +30,13 @@ task-manager-app/
 │   ├── login.png
 │   ├── register.png
 │   ├── tasks.png
-│   ├── edit.png
 │
 └── README.md
 
 🚀 Installation & Setup
 
 1️⃣ Clone Repository
-git clone https://github.com/anandhavalli11/task-manager-app
+git clone https://github.com/anandhavalli11/task-manager-app.git
 cd task-manager-app
 
 2️⃣ Backend Setup
@@ -72,19 +63,21 @@ POST /api/auth/register
 POST /api/auth/login
 
 📋 Task Routes
-GET    /api/tasks
-POST   /api/tasks
-PUT    /api/tasks/:id
+GET /api/tasks
+POST /api/tasks
+PUT /api/tasks/:id
 DELETE /api/tasks/:id
 
 📸 Screenshots
 
 🔐 Login Page
+![Login](./screenshots/login.png)
 
 📝 Register Page
+![Register](./screenshots/register.png)
 
 📋 Task Dashboard
-
+![Tasks](./screenshots/tasks.png)
 
 🔥 Future Improvements
 🌙 Dark Mode

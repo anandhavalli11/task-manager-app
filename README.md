@@ -32,7 +32,7 @@ This project includes user authentication and full CRUD task management features
 - JWT Authentication  
 
 ---
-
+```
 ## 📁 Project Structure
 
 task-manager-app/
@@ -56,7 +56,7 @@ task-manager-app/
 │   ├── tasks.png
 │
 └── README.md
-
+```
 ---
 
 ## 🚀 Installation & Setup
@@ -111,7 +111,7 @@ Register Page
 ![Register](./screenshots/register.png)
 
 Task Dashboard  
-![Tasks](./screenshots/tasks.png)
+![Task](./screenshots/task.png)
 
 ---
 
